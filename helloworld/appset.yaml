@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helloworld
+  namespace: argocd
+spec:
+  generators:
+    - clusters:
+        # This targets clusters registered in ArgoCD matching these names
+        selector:
+          matchExpressions:
+            - key: argocd.argoproj.io/secret-type
+              operator: In
+              values:
+                - cluster
+            - key: name
+              operator: In
+              values:
+                - cluster1
+                - cluster2
+                - cluster3
+  template:
+    metadata:
+      name: '{{name}}-helloworld'
+    spec:
+      project: default
+      source:
+        # Replace with your actual Git repository URL
+        repoURL: 'https://github.com/wizbit/k8s-examples'
+        targetRevision: HEAD
+        # Dynamically points to the correct Kustomize overlay directory per cluster
+        path: 'helloworld/{{name}}'
+      destination:
+        # Dynamically maps to the correct target cluster API server URL
+        server: '{{server}}'
+        namespace: helloworld
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
