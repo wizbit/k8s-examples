@@ -23,7 +23,7 @@ spec:
     metadata:
       name: '{{name}}-helloworld'
     spec:
-      project: default
+      project: examples
       source:
         # Replace with your actual Git repository URL
         repoURL: 'https://github.com/wizbit/k8s-examples'

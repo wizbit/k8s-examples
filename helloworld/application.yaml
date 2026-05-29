@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: helloworld
+  namespace: argocd
+spec:
+  project: examples
+  source:
+    repoURL: https://github.com/wizbit/k8s-examples
+    targetRevision: main
+    path: hello-world
+    directory:
+      recurse: false
+      include: 'appset.yaml'
+  destination:
+    name: cluster1 # ApplicationSets MUST be deployed to the control plane (cluster1)
+    namespace: argocd
